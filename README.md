@@ -1,4 +1,4 @@
-[![mope18](https://circleci.com/gh/<ORG_NAME>/<PROJECT_NAME>.svg?style=svg)](https://app.circleci.com/pipelines/github/mope18/microblog)
+[![mope18](https://circleci.com/gh/mope18/microblog.svg?style=svg)](https://app.circleci.com/pipelines/github/mope18/microblog)
 
 Microblog
 ===================
