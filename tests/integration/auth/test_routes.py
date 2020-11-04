@@ -17,7 +17,7 @@ def test_register_login_login_register_when_logged_in(client, user_dict, registe
             data=user_dict,
             follow_redirects=True,
         )
-        assert session['user_id'] == "1"
+        assert session['_user_id'] == "1"
         assert response.status_code == 200
         assert b"Hi, doe!" in response.data # Check that was redirected to /index
 
