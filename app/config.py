@@ -45,7 +45,17 @@ class TestConfig(Config):
     # Disable CSRF tokens in the Forms (only valid for testing purposes!)
     WTF_CSRF_ENABLED = False
 
-
+""" class TestConfig(Config):
+    
+    ENV = "test"
+    TESTING = True
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'app.db')
+    # Bcrypt algorithm hashing rounds (reduced for testing purposes only!)
+    BCRYPT_LOG_ROUNDS = 4
+    # Disable CSRF tokens in the Forms (only valid for testing purposes!)
+    WTF_CSRF_ENABLED = False """
 
 class RequestFormatter(Formatter):
     """

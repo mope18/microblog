@@ -1,4 +1,5 @@
--r prod.txt
+ -r prod.txt
+pymysql >= 0.9.3
 pylint >= 2.6.0
 pytest >= 6.1.2
 coverage~=4.5.4

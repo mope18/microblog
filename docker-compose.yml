@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+    prod:
+        image: morper/microblog:latest
+        container_name: "microblog"
+        ports:
+            - "8000:5000"
+        restart: "always"
+        links:
+          - mysql:dbserver
+        environment: 
+          SECRET_KEY: my-secret-key
+          DATABASE_URL: mysql+pymysql://microblog:malte2004@dbserver/microblog
+        
+    mysql:
+        image: mysql/mysql-server:5.7
+        container_name: "mysql"
+        restart: "always"
+        environment:
+          MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+          MYSQL_DATABASE: microblog
+          MYSQL_USER: microblog
+          MYSQL_PASSWORD: malte2004
+        volumes: 
+          - ../microblog-data:/var/lib/mysql
+
+    test:
+        image: morper/microblog-test:latest
+        container_name: "microblog-test"
+        environment: 
+          SECRET_KEY: my-secret-key
+          DATABASE_URL: mysql+pymysql://microblog:malte2004@dbserver/microblog
+        command: ["ash", "/usr/local/bin/activate"]
+        command: ["make", "validate", "test-unit", "test-integration"]
+        volumes:
+          - "./:/home/microblog"
+        

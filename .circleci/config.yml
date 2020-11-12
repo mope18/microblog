@@ -1,11 +1,17 @@
-version: 2
+version: 2.1
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: microblog
+    docker:
+      - image: circleci/buildpack-deps:stretch
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/python:3.7
-
+    
     working_directory: ~/repo
-
+    
     steps:
       # Step 1: obtain repo from GitHub
       - checkout
@@ -17,11 +23,72 @@ jobs:
             . venv/bin/activate
             pip install wheel
             pip install -r requirements.txt
-            make install-dev
+            make install-test
             flask db upgrade
       # Step 3: run linter and tests
       - run:
           name: run tests
           command: |
             . venv/bin/activate
-            make test
+            make validate test-unit test-integration
+
+  build:
+    executor: docker-publisher
+      environment:
+        IMAGE_NAME: morper/microblog
+      docker:
+        - image: circleci/buildpack-deps:stretch
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run:
+            name: Build Docker image
+            command: docker build -t $IMAGE_NAME:latest .
+        - run:
+            name: Archive Docker image
+            command: docker save -o image.tar $IMAGE_NAME
+        - persist_to_workspace:
+            root: .
+            paths:
+              - ./image.tar
+
+  publish-latest:
+    executor: docker-publisher
+      environment:
+        IMAGE_NAME: building-on-ci
+      docker:
+        - image: circleci/buildpack-deps:stretch
+      steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - setup_remote_docker
+        - run:
+            name: Load archived Docker image
+            command: docker load -i /tmp/workspace/image.tar
+        - run:
+            name: Publish Docker Image to Docker Hub
+            command: |
+              echo "$DOCKER_PWD" | docker login -u "$DOCKER_LOGIN" --password-stdin
+              docker push $IMAGE_NAME:latest
+
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: master
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - test
+            - build
+          filters:
+            branches:
+              only: master
