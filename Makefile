@@ -219,4 +219,5 @@ install-test:
 .PHONY: install-deploy
 install-deploy:
 	${pip} install -r requirements/deploy.txt
+	@${pip} install ansible[azure]
 
