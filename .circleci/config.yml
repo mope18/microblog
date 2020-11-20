@@ -74,14 +74,13 @@ jobs:
           name: Install dependencies
           command: |
             pip install wheel
-            pip install -r requirements/deploy.txt
             make install-deploy
       - run:
           name: Prepare the password file
           command: echo "$VAULT_PASS" > ~/repo/ansible/.vault_password.txt
       - run:
           name: Decrypt files and run playbooks
-          command: cd ansible && ansible-playbook gather_vm_instances.yml setup_appserver.yml --vault-password-file .vault_password.txt
+          command: cd ansible && cat .vault_password.txt && ansible-playbook gather_vm_instances.yml setup_appserver.yml --vault-password-file .vault_password.txt
 
 workflows:
   version: 2
