@@ -72,13 +72,13 @@ jobs:
       - run: echo "source venv/bin/activate" >> $BASH_ENV
       - run:
           name: Install dependencies
-          command: make install-deploy
+          command: |
+            pip install wheel
+            make install-deploy
+  
       - run:
-          name: Prepare the password file
-          command: echo "$VAULT_PASS" > ~/repo/ansible/.vault_password.txt
-      - run:
-          name: Decrypt files and run playbooks
-          command: cd ansible && ansible-playbook --vault-password-file ~/repo/ansible/.vault_password.txt gather_vm_instances.yml setup_appserver.yml
+          name: Run playbooks
+          command: cd ansible && ansible-playbook gather_vm_instances.yml setup_appserver.yml
 
 workflows:
   version: 2
