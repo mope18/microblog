@@ -11,9 +11,7 @@ jobs:
       - image: circleci/python:3.7
     working_directory: ~/repo    
     steps:
-      # Step 1: obtain repo from GitHub
       - checkout
-      # Step 2: create virtual env and install dependencies
       - run:
           name: install dependencies
           command: |
@@ -23,7 +21,6 @@ jobs:
             pip install -r requirements.txt
             make install-test
             flask db upgrade
-      # Step 3: run linter and tests
       - run:
           name: run tests
           command: |
@@ -61,6 +58,30 @@ jobs:
             echo "$DOCKER_PWD" | docker login -u "$DOCKER_LOGIN" --password-stdin
             docker push $IMAGE_NAME:latest
 
+  deploy:
+    executor: docker-publisher
+    working_directory: ~/repo    
+    steps:
+      - checkout
+      - run:
+          name: Install and activate venv
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+      - run: echo "source venv/bin/activate" >> $BASH_ENV
+      - run:
+          name: Install dependencies
+          command: |
+            pip install wheel
+            pip install -r requirements/deploy.txt
+            make install-deploy
+      - run:
+          name: Prepare the password file
+          command: echo "$VAULT_PASS" > ~/repo/ansible/.vault_password.txt
+      - run:
+          name: Decrypt files and run playbooks
+          command: cd ansible && ansible-playbook gather_vm_instances.yml setup_appserver.yml --vault-password-file .vault_password.txt
+
 workflows:
   version: 2
   build-master:
@@ -77,8 +98,13 @@ workflows:
               only: master
       - publish-latest:
           requires:
-            - test
             - build
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - publish-latest
           filters:
             branches:
               only: master

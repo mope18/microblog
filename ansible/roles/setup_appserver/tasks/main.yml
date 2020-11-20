@@ -1,0 +1,10 @@
+---
+-   name: Launch microblog container
+    docker_container:
+        name: "microblog"
+        image: morper/microblog:latest
+        published_ports: 8000:5000
+        restart: True
+        env:
+          SECRET_KEY: my-secret-key
+          DATABASE_URL: "mysql+pymysql://microblog:malte2004@{{ groups.database[0] }}/microblog"

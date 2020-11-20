@@ -1,0 +1,39 @@
+---
+-   name: Update apt-cache and upgrade  
+    apt:
+        force_apt_get: yes
+        update_cache: yes
+        cache_valid_time: 3600
+        upgrade: yes
+
+-   name: Install docker dependencies packages
+    apt:
+        force_apt_get: yes
+        name: "{{ docker_dependencies_packages }}"
+
+-   name: Add Docker apt key
+    apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        state: present
+
+-   name: Add docker apt repo
+    apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ansible_lsb.codename}} stable"
+        update_cache: yes
+
+-   name: Update apt-cache
+    apt:
+        force_apt_get: yes
+        update_cache: yes
+        cache_valid_time: 3600
+        upgrade: no
+
+-   name: Install docker packages
+    apt:
+        force_apt_get: yes
+        name: "{{ docker_packages }}"
+
+-   name: Install Docker Module for Python
+    pip:
+        name: docker

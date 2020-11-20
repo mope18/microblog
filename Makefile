@@ -76,10 +76,8 @@ help:
 # target: add-ssh                         - Add ssh key to agent
 .PHONY: add-ssh
 add-ssh:
-	eval `ssh-agent -s`
-	ssh-add <path/too/ssh-key>
-
-
+	eval `ssh-agent`
+	ssh-add ~/.ssh/azureci
 
 # target: info                         - Displays versions.
 .PHONY: info
