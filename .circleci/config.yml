@@ -80,7 +80,7 @@ jobs:
           command: echo "$VAULT_PASS" > ~/repo/ansible/.vault_password.txt
       - run:
           name: Decrypt files and run playbooks
-          command: cd ansible && cat .vault_password.txt && ansible-playbook gather_vm_instances.yml setup_appserver.yml --vault-password-file .vault_password.txt
+          command: cd ansible && ansible-playbook gather_vm_instances.yml setup_appserver.yml --vault-password-file ~/repo/ansible/.vault_password.txt
 
 workflows:
   version: 2
