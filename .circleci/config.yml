@@ -66,6 +66,7 @@ jobs:
       - run:
           name: Install and activate venv
           command: |
+            sudo apt-get install python3-venv
             python3 -m venv venv
             . venv/bin/activate
       - run: echo "source venv/bin/activate" >> $BASH_ENV
