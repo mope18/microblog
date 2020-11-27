@@ -23,6 +23,24 @@ sg_groups:
             priority: 1003
             direction: Inbound
             source_address_prefix: '0.0.0.0/0'
+        -   name: node_exporter
+            protocol: Tcp
+            destination_port_range: 9100
+            access: Allow
+            priority: 1004
+            direction: Inbound
+        -   name: nginx-prometheus-exporter
+            protocol: Tcp
+            destination_port_range: 9113
+            access: Allow
+            priority: 1005
+            direction: Inbound
+        -   name: statsd-exporter
+            protocol: Tcp
+            destination_port_range: 9102
+            access: Allow
+            priority: 1006
+            direction: Inbound
     -   name: appServer
         port_rules:
         -   name: APP
@@ -39,6 +57,12 @@ sg_groups:
             priority: 1002
             direction: Inbound
             source_address_prefix: '0.0.0.0/0'
+        -   name: node_exporter
+            protocol: Tcp
+            destination_port_range: 9100
+            access: Allow
+            priority: 1003
+            direction: Inbound
     -   name: database
         port_rules:
         -   name: SSH
@@ -53,5 +77,47 @@ sg_groups:
             destination_port_range: 3306
             access: Allow
             priority: 1002
+            direction: Inbound
+            source_address_prefix: '0.0.0.0/0'
+        -   name: node_exporter
+            protocol: Tcp
+            destination_port_range: 9100
+            access: Allow
+            priority: 1003
+            direction: Inbound
+        -   name: mysqld_exporter
+            protocol: Tcp
+            destination_port_range: 9104
+            access: Allow
+            priority: 1004
+            direction: Inbound
+    -   name: monitoring
+        port_rules:
+        -   name: SSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+            priority: 1001
+            direction: Inbound
+            source_address_prefix: '0.0.0.0/0'
+        -   name: gui
+            protocol: Tcp
+            destination_port_range: 9090
+            access: Allow
+            priority: 1002
+            direction: Inbound
+            source_address_prefix: '0.0.0.0/0'
+        -   name: alert
+            protocol: Tcp
+            destination_port_range: 9093
+            access: Allow
+            priority: 1003
+            direction: Inbound
+            source_address_prefix: '0.0.0.0/0'
+        -   name: grafana
+            protocol: Tcp
+            destination_port_range: 3000
+            access: Allow
+            priority: 1004
             direction: Inbound
             source_address_prefix: '0.0.0.0/0'

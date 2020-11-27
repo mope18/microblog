@@ -7,4 +7,21 @@
         restart: True
         env:
           SECRET_KEY: my-secret-key
-          DATABASE_URL: "mysql+pymysql://microblog:malte2004@{{ groups.database[0] }}/microblog"
+          DATABASE_URL: "mysql+pymysql://microblog:{{ db_password }}@{{ groups.database[0] }}/microblog"
+
+-   name: Copy statsd.conf
+    copy:
+        src: files/statsd.conf
+        dest: /home/{{ server_user }}/statsd.conf
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: '0644'
+
+-   name: Run statsd-exporter container
+    command: docker run -dP \
+            -p 9102:9102 \
+            -p 9125:9125 \
+            --restart=always \
+            --net=host \
+            -v /home/{{ server_user }}/statsd.conf:/statsd/statsd.conf \
+            prom/statsd-exporter "--statsd.mapping-config=/statsd/statsd.conf"

@@ -1,11 +1,10 @@
 ---
   -   hosts:
-          -   database
-          -   appServer
-          -   loadBalancer
           -   monitoring
       remote_user: azureuser
       become: yes
       become_method: sudo
+      vars:
+          ansible_python_interpreter: /usr/bin/python3
       roles:
-          -   10-first-minutes
+          -   setup_monitoring

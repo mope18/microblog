@@ -7,3 +7,4 @@
 -   import_playbook: setup_database.yml
 -   import_playbook: setup_appserver.yml
 -   import_playbook: setup_loadbalancer.yml
+-   import_playbook: setup_monitoring.yml

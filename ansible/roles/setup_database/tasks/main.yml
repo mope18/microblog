@@ -12,3 +12,25 @@
           MYSQL_DATABASE: "{{ mysql_database_name }}"
           MYSQL_USER: "{{ mysql_user }}"
           MYSQL_PASSWORD: "{{ mysql_password }}"
+
+-   name: Copy add_exporter_user.sql to directory
+    template:
+        src: files/add_exporter_user.sql.j2
+        dest: /home/deploy/add_exporter_user.sql
+
+-   name: Add exporter db user
+    shell: docker exec -i mysql mysql -uroot -p{{ mysql_root_password }} < /home/deploy/add_exporter_user.sql
+
+-   name: Run mysql-exporter container
+    command: docker run -d \
+            -p 9104:9104 \
+            --network host \
+            -e DATA_SOURCE_NAME="exporter:{{ exporter_user_pw }}@(localhost:3306)/" \
+            --restart always \
+            prom/mysqld-exporter:latest \
+            --collect.auto_increment.columns \
+            --collect.info_schema.processlist \
+            --collect.binlog_size \
+            --collect.engine_innodb_status \
+            --collect.engine_tokudb_status \
+            --collect.global_status

@@ -1,2 +1,4 @@
 ---
-dependencies: [docker_setup]
+dependencies: 
+  - docker_setup
+  - prometheus_node_exporter_setup
