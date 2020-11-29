@@ -106,6 +106,12 @@
 -   name: Install grafana
     command: dpkg -i /home/deploy/{{ grafana_file_name }}
 
+-   name: Copy prometheus.yml to directory
+    template:
+        src: files/grafana.ini.j2
+        dest: /etc/grafana/grafana.ini
+        mode: "go-w"
+
 -   name: Remove grafana deb file
     file:
         path: /home/deploy/{{ grafana_file_name }}

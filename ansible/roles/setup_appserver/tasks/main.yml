@@ -1,9 +1,15 @@
 ---
+-   name: Remove microblog container
+    docker_container:
+        name: microblog
+        state: absent
+
 -   name: Launch microblog container
     docker_container:
         name: "microblog"
         image: morper/microblog:latest
-        published_ports: 8000:5000
+        #published_ports: 5000:5000
+        network_mode: host
         restart: True
         env:
           SECRET_KEY: my-secret-key
@@ -17,10 +23,14 @@
         group: "{{ server_user }}"
         mode: '0644'
 
+-   name: Remove statsd-exporter container
+    docker_container:
+        name: statsd-exporter
+        state: absent
+
 -   name: Run statsd-exporter container
     command: docker run -dP \
-            -p 9102:9102 \
-            -p 9125:9125 \
+            --name statsd-exporter \
             --restart=always \
             --net=host \
             -v /home/{{ server_user }}/statsd.conf:/statsd/statsd.conf \

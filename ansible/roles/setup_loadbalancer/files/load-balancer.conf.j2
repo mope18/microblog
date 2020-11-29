@@ -1,7 +1,7 @@
 http {
     upstream app-hosts {
         {{ lb_method }};
-        server {{ groups['appServer'][0] }}:8000;
+        server {{ groups['appServer'][0] }}:5000;
     }
 
     access_log /var/log/nginx/access.log;
@@ -18,6 +18,15 @@ http {
        #location / {
        #   proxy_pass http://app-hosts;
        #}
+
+       location /grafana/ {
+         proxy_pass http://{{ groups['monitoring'][0] }}:3000/;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-Host $host;
+         proxy_set_header X-Forwarded-Server $host;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      }
     }
     server {
        listen 443 ssl;
@@ -31,6 +40,15 @@ http {
        location / {
           proxy_pass http://app-hosts;
        }
+
+      location /grafana/ {
+         proxy_pass http://{{ groups['monitoring'][0] }}:3000/;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-Host $host;
+         proxy_set_header X-Forwarded-Server $host;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      }
 
       location /metrics {
         stub_status on;

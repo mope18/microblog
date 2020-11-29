@@ -35,12 +35,6 @@ sg_groups:
             access: Allow
             priority: 1005
             direction: Inbound
-        -   name: statsd-exporter
-            protocol: Tcp
-            destination_port_range: 9102
-            access: Allow
-            priority: 1006
-            direction: Inbound
     -   name: appServer
         port_rules:
         -   name: APP
@@ -52,7 +46,7 @@ sg_groups:
             source_address_prefix: '0.0.0.0/0'
         -   name: HTTP
             protocol: Tcp
-            destination_port_range: 8000
+            destination_port_range: 5000
             access: Allow
             priority: 1002
             direction: Inbound
@@ -62,6 +56,12 @@ sg_groups:
             destination_port_range: 9100
             access: Allow
             priority: 1003
+            direction: Inbound
+        -   name: statsd-exporter
+            protocol: Tcp
+            destination_port_range: 9102
+            access: Allow
+            priority: 1004
             direction: Inbound
     -   name: database
         port_rules:

@@ -53,8 +53,14 @@
 -   name: Restart nginx
     command: service nginx start
 
+-   name: Remove nginx-prometheus-exporter container
+    docker_container:
+        name: nginx-prometheus-exporter
+        state: absent
+
 -   name: Run nginx-prometheus-exporter container
     command: docker run -d \
+            --name nginx-prometheus-exporter \
             --restart always \
             -p 9113:9113 \
             nginx/nginx-prometheus-exporter:0.4.2 \
