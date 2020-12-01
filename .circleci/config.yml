@@ -71,7 +71,7 @@ jobs:
           command: docker load -i /tmp/workspace/image.tar
       - snyk/scan:
           docker-image-name: $IMAGE_NAME
-          additional-arguments: "--policy-path=.snyk"
+          additional-arguments: "--policy-path=.snyk -d"
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
