@@ -6,3 +6,5 @@
     no_log: False # was True
     roles:
         -   provision_instances
+        -   gather_vm_instances
+        -   security_groups

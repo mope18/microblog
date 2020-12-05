@@ -31,7 +31,9 @@ http {
     server {
        listen 443 ssl;
        server_name  {{ domain_name }} www.{{ domain_name }};
-       add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+       add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+       add_header X-Content-Type-Options nosniff;
+       add_header X-Frame-Options "sameorigin" always;
         
        ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/cert.pem;
        ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
@@ -39,6 +41,7 @@ http {
 
        location / {
           proxy_pass http://app-hosts;
+          proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
        }
 
       location /grafana/ {

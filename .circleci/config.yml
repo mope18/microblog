@@ -42,7 +42,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            make validate test-unit test-integration
+            make validate test-unit test-integration bandit
 
   build:
     executor: docker-publisher
@@ -71,7 +71,7 @@ jobs:
           command: docker load -i /tmp/workspace/image.tar
       - snyk/scan:
           docker-image-name: $IMAGE_NAME
-          additional-arguments: "--policy-path=.snyk -d"
+          additional-arguments: "--policy-path=.snyk"
       - run:
           name: Publish Docker Image to Docker Hub
           command: |

@@ -108,7 +108,10 @@ validate-docker:
 validate-ci:
 	@circleci config validate
 
-
+# target: bandit	                  - Test app for security issues using bandit
+.PHONY: bandit
+bandit:
+	bandit -r app
 
 # target: test-integration             - Run tests in tests/integration with coverage.py
 .PHONY: test-integration
@@ -219,3 +222,7 @@ install-deploy:
 	${pip} install -r requirements/deploy.txt
 	@${pip} install ansible[azure]
 
+# target: zap			                 - Scan using zap
+.PHONY: zap
+zap:
+	docker run -t owasp/zap2docker-stable zap-baseline.py -t https://www.sheltie.se
