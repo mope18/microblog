@@ -7,3 +7,7 @@ flask-moment == 0.10.0
 flask-bootstrap == 3.3.7.1
 email_validator == 1.1.1
 python-dotenv == 0.15.0
+idna>=3.7 # not directly required, pinned by Snyk to avoid a vulnerability
+jinja2>=3.1.4 # not directly required, pinned by Snyk to avoid a vulnerability
+mako>=1.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
+werkzeug>=2.2.3 # not directly required, pinned by Snyk to avoid a vulnerability
