@@ -3,3 +3,4 @@ boto3 >= 1.9.203
 ansible <= 2.9.13
 PyMySQL >= 0.9.3
 # ansible[azure] # Does not work from file. Need to be installed manually
+cryptography>=46.0.5 # not directly required, pinned by Snyk to avoid a vulnerability
